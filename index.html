@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ideal Hunza Transport</title>
+<style>
+  body { font-family: Arial, sans-serif; background:#f2f2f2; margin:0; padding:20px; }
+  h1 { text-align:center; color:#333; }
+  .container { max-width:500px; margin:20px auto; background:#fff; padding:20px; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,0.2); }
+  button { display:block; width:100%; margin-top:15px; padding:12px; border:none; border-radius:8px; font-size:16px; cursor:pointer; }
+  .submit-btn { background:#4CAF50; color:white; }
+  .share-btn { background:#25D366; color:white; }
+  .call-btn { background:#2196F3; color:white; }
+  .driver-card { background:#f9f9f9; padding:10px; border-radius:8px; margin-top:10px; box-shadow:0 1px 4px rgba(0,0,0,0.1); }
+  .driver-name { font-weight:bold; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>IDEAL HUNZA TRANSPORT</h1>
+
+  <!-- Driver Registration Button -->
+  <button class="submit-btn" onclick="registerDriver()">Submit Registration</button>
+
+  <!-- Share App Button -->
+  <button class="share-btn" onclick="shareApp()">Share App on WhatsApp</button>
+
+  <!-- Passenger Nearest Driver Search -->
+  <button class="submit-btn" onclick="searchNearestDriver()">Search Nearest Driver</button>
+
+  <!-- Driver list will appear here -->
+  <div id="driverList"></div>
+</div>
+
+<script>
+// Driver registration
+function registerDriver() {
+  alert("Driver registration function called!");
+}
+
+// Share App on WhatsApp
+function shareApp() {
+  let text = "Ideal Hunza Transport 🚖\n\nDriver registration aur local transport service ke liye use karein.\n\nApni booking aur driver details WhatsApp par share karein.";
+  let whatsappUrl = "https://wa.me/?text=" + encodeURIComponent(text);
+  window.open(whatsappUrl, "_blank");
+}
+
+// Passenger side nearest driver search with contact options
+function searchNearestDriver() {
+  let drivers = [
+    { name: "Driver Ali", distance: "1.2 km", phone: "03123456789" },
+    { name: "Driver Ahmed", distance: "2.5 km", phone: "03211234567" },
+    { name: "Driver Khan", distance: "3.1 km", phone: "03331234567" }
+  ];
+
+  let driverListDiv = document.getElementById("driverList");
+  driverListDiv.innerHTML = ""; // clear previous
+
+  drivers.forEach(d => {
+    let card = document.createElement("div");
+    card.className = "driver-card";
+
+    card.innerHTML = `
+      <div class="driver-name">${d.name} - ${d.distance}</div>
+      <button class="call-btn" onclick="callDriver('${d.phone}')">Call</button>
+      <button class="share-btn" onclick="whatsappDriver('${d.phone}')">WhatsApp</button>
+    `;
+
+    driverListDiv.appendChild(card);
+  });
+}
+
+// Call driver
+function callDriver(phone) {
+  window.open("tel:" + phone, "_blank");
+}
+
+// WhatsApp driver
+function whatsappDriver(phone) {
+  let text = `Hello ${phone}, I want to book a ride with Ideal Hunza Transport.`;
+  let whatsappUrl = "https://wa.me/" + phone + "?text=" + encodeURIComponent(text);
+  window.open(whatsappUrl, "_blank");
+}
+</script>
+
+</body>
+</html>
