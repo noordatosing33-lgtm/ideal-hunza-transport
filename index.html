@@ -2,243 +2,458 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Ideal Hunza Transport</title>
-  <meta name="theme-color" content="#0f172a" />
+  <meta name="theme-color" content="#0b5d3b" />
+  <meta name="description" content="Ideal Hunza Transport - Passenger & Driver App" />
+  <link rel="manifest" href="manifest.json" />
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+    * { box-sizing: border-box; }
     body {
-      background: #f3f4f6;
-      color: #111827;
-      min-height: 100vh;
-      padding: 12px;
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f7f9;
+      color: #222;
     }
     .app {
       max-width: 480px;
       margin: auto;
+      min-height: 100vh;
       background: #fff;
-      border-radius: 20px;
-      overflow: hidden;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+      box-shadow: 0 0 18px rgba(0,0,0,0.08);
     }
-    .header {
-      background: linear-gradient(135deg, #0f172a, #1d4ed8);
-      color: white;
-      padding: 20px 16px;
-      text-align: center;
+    .hero {
+      position: relative;
+      height: 220px;
+      background-image: url('https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80');
+      background-size: cover;
+      background-position: center;
+      color: #fff;
+      display: flex;
+      align-items: end;
+      padding: 18px;
     }
-    .header h1 {
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.65), rgba(0,0,0,0.15));
+    }
+    .hero-content {
+      position: relative;
+      z-index: 1;
+    }
+    .hero h1 {
+      margin: 0;
       font-size: 24px;
-      margin-bottom: 6px;
     }
-    .header p {
+    .hero p {
+      margin: 6px 0 0;
       font-size: 14px;
-      opacity: 0.9;
+      opacity: 0.95;
     }
+    .top-actions {
+      padding: 12px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      background: #fff;
+    }
+    .btn {
+      border: none;
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 15px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .btn-primary { background: #0b5d3b; color: #fff; }
+    .btn-secondary { background: #1b8f5a; color: #fff; }
+    .btn-outline { background: #eef6f1; color: #0b5d3b; }
     .section {
-      padding: 16px;
-      border-bottom: 1px solid #e5e7eb;
+      padding: 14px;
+      border-top: 1px solid #eaeaea;
     }
     .section h2 {
-      font-size: 18px;
-      margin-bottom: 12px;
-      color: #1e3a8a;
+      margin: 0 0 10px;
+      font-size: 19px;
+      color: #0b5d3b;
     }
-    input, select, button, textarea {
+    .card {
+      background: #f9fbfc;
+      border: 1px solid #e4edf0;
+      border-radius: 14px;
+      padding: 12px;
+      margin-bottom: 12px;
+    }
+    input, select, textarea {
       width: 100%;
       padding: 12px;
-      margin-top: 8px;
-      border-radius: 12px;
-      border: 1px solid #d1d5db;
-      font-size: 15px;
-    }
-    button {
-      border: none;
-      background: #2563eb;
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    button:hover { opacity: 0.95; }
-    .btn-green { background: #16a34a; }
-    .btn-dark { background: #111827; }
-    .btn-orange { background: #ea580c; }
-    .btn-red { background: #dc2626; }
-    .btn-gray { background: #374151; }
-    .small {
-      font-size: 13px;
-      color: #6b7280;
-      margin-top: 8px;
-    }
-    .driver-card {
-      background: #f9fafb;
-      border: 1px solid #e5e7eb;
-      border-radius: 16px;
-      padding: 14px;
-      margin-top: 12px;
-    }
-    .driver-card h3 {
-      margin-bottom: 6px;
-      color: #111827;
-    }
-    .driver-card p {
-      margin: 4px 0;
+      border: 1px solid #cfd9de;
+      border-radius: 10px;
+      margin-bottom: 10px;
       font-size: 14px;
+      background: #fff;
     }
-    .driver-actions {
+    .small {
+      font-size: 12px;
+      color: #666;
+    }
+    .badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: bold;
+      background: #fff3cd;
+      color: #8a6d3b;
+      margin-top: 6px;
+    }
+    .driver-item {
+      background: #fff;
+      border: 1px solid #dde8ec;
+      border-radius: 14px;
+      margin-bottom: 10px;
+      overflow: hidden;
+    }
+    .driver-head {
+      padding: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      background: #f7fbf8;
+    }
+    .driver-head strong {
+      display: block;
+      color: #0b5d3b;
+    }
+    .driver-head span {
+      font-size: 12px;
+      color: #555;
+    }
+    .driver-body {
+      display: none;
+      padding: 12px;
+      border-top: 1px solid #e7eef1;
+      background: #fff;
+    }
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .action-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 8px;
       margin-top: 10px;
     }
-    .status {
-      margin-top: 10px;
+    .full {
+      width: 100%;
+      margin-top: 8px;
+    }
+    .notice {
+      background: #eef9f2;
+      border: 1px solid #cfead9;
+      color: #0b5d3b;
       padding: 10px;
-      border-radius: 10px;
-      font-size: 14px;
-      background: #eff6ff;
-      color: #1d4ed8;
-      border: 1px solid #bfdbfe;
-    }
-    .footer {
-      padding: 16px;
-      text-align: center;
+      border-radius: 12px;
       font-size: 13px;
-      color: #6b7280;
+      margin-bottom: 10px;
     }
-    .hidden { display: none; }
+    .danger {
+      background: #fff7e8;
+      border: 1px solid #f0ddb0;
+      color: #8a6d3b;
+      padding: 10px;
+      border-radius: 12px;
+      font-size: 13px;
+      margin-bottom: 10px;
+    }
+    .footer-space {
+      height: 30px;
+    }
   </style>
 </head>
 <body>
   <div class="app">
-    <div class="header">
-      <h1>Ideal Hunza Transport</h1>
-      <p>Passenger & Driver Nearby Transport Service</p>
+    <div class="hero">
+      <div class="hero-content">
+        <h1>🚖 Ideal Hunza Transport</h1>
+        <p>Nearest Driver • Passenger Booking • Hunza Travel</p>
+      </div>
+    </div>
+
+    <div class="top-actions">
+      <button class="btn btn-primary" id="installBtn">📲 Install App</button>
+      <button class="btn btn-secondary" onclick="shareApp()">🔗 Share App</button>
     </div>
 
     <div class="section">
-      <h2>Passenger Side</h2>
-      <input type="text" id="passengerName" placeholder="Passenger Name" />
-      <input type="text" id="pickup" placeholder="Pickup Location" />
-      <input type="text" id="dropoff" placeholder="Drop Location" />
-      <button onclick="findDrivers()">Search Nearest Driver</button>
-      <div id="searchStatus" class="status hidden"></div>
-      <div id="driverResults"></div>
+      <h2>Passenger Booking</h2>
+      <div class="card">
+        <input type="text" id="pName" placeholder="Passenger Name" />
+        <input type="tel" id="pPhone" placeholder="Passenger Phone" />
+        <input type="text" id="pickup" placeholder="Pickup Location" />
+        <input type="text" id="dropoff" placeholder="Drop Location" />
+        <button class="btn btn-outline full" onclick="getPassengerGPS()">📍 Use My GPS</button>
+        <div class="small" id="pGpsText">GPS not selected yet</div>
+        <button class="btn btn-primary full" onclick="findNearestDrivers()">🔍 Find Nearest Drivers</button>
+      </div>
     </div>
 
     <div class="section">
       <h2>Driver Registration</h2>
-      <input type="text" id="driverName" placeholder="Driver Name" />
-      <input type="text" id="driverPhone" placeholder="Phone Number (03xxxxxxxxx)" />
-      <input type="text" id="driverVehicle" placeholder="Vehicle / Animal (e.g. Suzuki, Pickup, Ghora, Khachar)" />
-      <input type="text" id="driverArea" placeholder="Area / Route (e.g. Hunza, Bagh, Pir Chinasi)" />
-      <button class="btn-green" onclick="registerDriver()">Submit Registration</button>
-      <div id="driverStatus" class="status hidden"></div>
+      <div class="card">
+        <div class="danger">
+          <strong>Driver Registration Fee:</strong> Rs.100<br>
+          <strong>Package:</strong> 10 Bookings<br>
+          <strong>EasyPaisa:</strong> 03713370833<br>
+          Payment ke baad hi registration submit karein.
+        </div>
+
+        <input type="text" id="dName" placeholder="Driver Name" />
+        <input type="tel" id="dPhone" placeholder="Driver Phone / WhatsApp" />
+        <input type="text" id="vehicle" placeholder="Vehicle (Bolan / Hiace / Car etc)" />
+        <input type="text" id="city" placeholder="City / Area" />
+        <input type="text" id="txnId" placeholder="EasyPaisa Transaction ID" />
+        <button class="btn btn-outline full" onclick="getDriverGPS()">📍 Save My GPS</button>
+        <div class="small" id="dGpsText">Driver GPS not saved yet</div>
+        <button class="btn btn-primary full" onclick="registerDriver()">✅ Submit Driver Registration</button>
+      </div>
     </div>
 
     <div class="section">
-      <h2>Quick Share</h2>
-      <textarea id="shareText" rows="4" placeholder="Type message for WhatsApp share...">Ideal Hunza Transport ready hai. Passenger aur driver dono ke liye app available hai.</textarea>
-      <button class="btn-dark" onclick="shareWhatsApp()">Share on WhatsApp</button>
-      <p class="small">WhatsApp installed hona chahiye.</p>
+      <h2>Registered Drivers</h2>
+      <div class="notice">
+        Drivers one by one compact list me show honge. Tap karke details open karo.
+      </div>
+      <div id="driversList"></div>
     </div>
 
-    <div class="footer">
-      Ideal Hunza Transport © 2026
-    </div>
+    <div class="footer-space"></div>
   </div>
 
   <script>
-    let drivers = [
-      {
-        name: "Ayub Driver",
-        phone: "03001234567",
-        vehicle: "Suzuki Pickup",
-        area: "Hunza"
-      },
-      {
-        name: "Naseer Transport",
-        phone: "03111234567",
-        vehicle: "Mazda Loader",
-        area: "Bagh"
-      }
-    ];
+    let deferredPrompt = null;
+    let passengerGPS = null;
+    let driverGPS = null;
 
-    function showStatus(id, text) {
-      const el = document.getElementById(id);
-      el.textContent = text;
-      el.classList.remove("hidden");
+    const APP_LINK = window.location.href;
+
+    function loadDrivers() {
+      return JSON.parse(localStorage.getItem("idealHunzaDrivers") || "[]");
+    }
+
+    function saveDrivers(drivers) {
+      localStorage.setItem("idealHunzaDrivers", JSON.stringify(drivers));
+    }
+
+    function toRad(v) {
+      return v * Math.PI / 180;
+    }
+
+    function distanceKm(lat1, lon1, lat2, lon2) {
+      const R = 6371;
+      const dLat = toRad(lat2 - lat1);
+      const dLon = toRad(lon2 - lon1);
+      const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      return R * c;
+    }
+
+    function getPassengerGPS() {
+      if (!navigator.geolocation) {
+        alert("GPS not supported on this phone.");
+        return;
+      }
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          passengerGPS = {
+            lat: pos.coords.latitude,
+            lng: pos.coords.longitude
+          };
+          document.getElementById("pGpsText").innerText =
+            "Passenger GPS saved: " + passengerGPS.lat.toFixed(5) + ", " + passengerGPS.lng.toFixed(5);
+          alert("Passenger GPS saved!");
+        },
+        () => alert("GPS permission denied or failed.")
+      );
+    }
+
+    function getDriverGPS() {
+      if (!navigator.geolocation) {
+        alert("GPS not supported on this phone.");
+        return;
+      }
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          driverGPS = {
+            lat: pos.coords.latitude,
+            lng: pos.coords.longitude
+          };
+          document.getElementById("dGpsText").innerText =
+            "Driver GPS saved: " + driverGPS.lat.toFixed(5) + ", " + driverGPS.lng.toFixed(5);
+          alert("Driver GPS saved!");
+        },
+        () => alert("GPS permission denied or failed.")
+      );
     }
 
     function registerDriver() {
-      const name = document.getElementById("driverName").value.trim();
-      const phone = document.getElementById("driverPhone").value.trim();
-      const vehicle = document.getElementById("driverVehicle").value.trim();
-      const area = document.getElementById("driverArea").value.trim();
+      const name = document.getElementById("dName").value.trim();
+      const phone = document.getElementById("dPhone").value.trim();
+      const vehicle = document.getElementById("vehicle").value.trim();
+      const city = document.getElementById("city").value.trim();
+      const txnId = document.getElementById("txnId").value.trim();
 
-      if (!name || !phone || !vehicle || !area) {
-        showStatus("driverStatus", "Please fill all driver details.");
+      if (!name || !phone || !vehicle || !city || !txnId) {
+        alert("Please fill all driver fields including transaction ID.");
         return;
       }
 
-      drivers.push({ name, phone, vehicle, area });
+      const drivers = loadDrivers();
+      drivers.push({
+        id: Date.now(),
+        name,
+        phone,
+        vehicle,
+        city,
+        txnId,
+        fee: 100,
+        pkg: "10 bookings",
+        status: "Pending Approval",
+        gps: driverGPS
+      });
+      saveDrivers(drivers);
 
-      showStatus("driverStatus", "Driver registered successfully!");
+      document.getElementById("dName").value = "";
+      document.getElementById("dPhone").value = "";
+      document.getElementById("vehicle").value = "";
+      document.getElementById("city").value = "";
+      document.getElementById("txnId").value = "";
+      driverGPS = null;
+      document.getElementById("dGpsText").innerText = "Driver GPS not saved yet";
 
-      document.getElementById("driverName").value = "";
-      document.getElementById("driverPhone").value = "";
-      document.getElementById("driverVehicle").value = "";
-      document.getElementById("driverArea").value = "";
+      renderDrivers();
+      alert("Driver registered successfully! It is now listed below as Pending Approval.");
     }
 
-    function findDrivers() {
-      const passengerName = document.getElementById("passengerName").value.trim();
-      const pickup = document.getElementById("pickup").value.trim();
-      const dropoff = document.getElementById("dropoff").value.trim();
-      const results = document.getElementById("driverResults");
+    function toggleDetails(id) {
+      const el = document.getElementById("body-" + id);
+      el.style.display = el.style.display === "block" ? "none" : "block";
+    }
 
-      if (!passengerName || !pickup || !dropoff) {
-        showStatus("searchStatus", "Please fill passenger name, pickup and drop location.");
+    function renderDrivers(sortedDrivers = null) {
+      const list = document.getElementById("driversList");
+      const drivers = sortedDrivers || loadDrivers();
+
+      if (!drivers.length) {
+        list.innerHTML = '<div class="card">No drivers registered yet.</div>';
         return;
       }
 
-      showStatus("searchStatus", "Nearest drivers found below.");
-      results.innerHTML = "";
+      list.innerHTML = drivers.map((d, index) => {
+        let distanceText = "";
+        if (passengerGPS && d.gps) {
+          const km = distanceKm(passengerGPS.lat, passengerGPS.lng, d.gps.lat, d.gps.lng);
+          distanceText = ` • ${km.toFixed(1)} km`;
+        }
 
-      drivers.forEach(driver => {
-        const card = document.createElement("div");
-        card.className = "driver-card";
-        card.innerHTML = `
-          <h3>${driver.name}</h3>
-          <p><strong>Phone:</strong> ${driver.phone}</p>
-          <p><strong>Vehicle:</strong> ${driver.vehicle}</p>
-          <p><strong>Area:</strong> ${driver.area}</p>
-          <div class="driver-actions">
-            <button class="btn-green" onclick="callDriver('${driver.phone}')">Call Driver</button>
-            <button class="btn-dark" onclick="messageDriver('${driver.phone}', '${driver.name}', '${pickup}', '${dropoff}', '${passengerName}')">WhatsApp</button>
+        return `
+          <div class="driver-item">
+            <div class="driver-head" onclick="toggleDetails(${d.id})">
+              <div>
+                <strong>${index + 1}. ${d.name}</strong>
+                <span>${d.city} • ${d.vehicle}${distanceText}</span>
+              </div>
+              <div>▼</div>
+            </div>
+            <div class="driver-body" id="body-${d.id}">
+              <div><strong>Phone:</strong> ${d.phone}</div>
+              <div><strong>Vehicle:</strong> ${d.vehicle}</div>
+              <div><strong>City:</strong> ${d.city}</div>
+              <div><strong>Fee:</strong> Rs.${d.fee}</div>
+              <div><strong>Package:</strong> ${d.pkg}</div>
+              <div><strong>Transaction ID:</strong> ${d.txnId}</div>
+              <div><span class="badge">${d.status}</span></div>
+              <div class="action-row">
+                <a class="btn btn-secondary" style="text-decoration:none; text-align:center;" href="https://wa.me/92${d.phone.replace(/^0/, '')}" target="_blank">WhatsApp</a>
+                <a class="btn btn-primary" style="text-decoration:none; text-align:center;" href="tel:${d.phone}">Call</a>
+              </div>
+            </div>
           </div>
         `;
-        results.appendChild(card);
+      }).join("");
+    }
+
+    function findNearestDrivers() {
+      const drivers = loadDrivers();
+      if (!drivers.length) {
+        alert("No drivers available yet.");
+        return;
+      }
+
+      if (!passengerGPS) {
+        alert("Please tap 'Use My GPS' first.");
+        return;
+      }
+
+      const withDistance = drivers.map(d => {
+        let dist = 999999;
+        if (d.gps) {
+          dist = distanceKm(passengerGPS.lat, passengerGPS.lng, d.gps.lat, d.gps.lng);
+        }
+        return { ...d, _dist: dist };
+      });
+
+      withDistance.sort((a, b) => a._dist - b._dist);
+      renderDrivers(withDistance);
+      alert("Nearest drivers sorted successfully!");
+    }
+
+    async function shareApp() {
+      if (navigator.share) {
+        try {
+          await navigator.share({
+            title: "Ideal Hunza Transport",
+            text: "Open this transport app:",
+            url: APP_LINK
+          });
+        } catch (e) {}
+      } else {
+        prompt("Copy this app link:", APP_LINK);
+      }
+    }
+
+    window.addEventListener("beforeinstallprompt", (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      document.getElementById("installBtn").style.display = "block";
+    });
+
+    document.getElementById("installBtn").addEventListener("click", async () => {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        await deferredPrompt.userChoice;
+        deferredPrompt = null;
+      } else {
+        alert("Install popup not ready yet. Open in Chrome and try again after a few seconds.");
+      }
+    });
+
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("./service-worker.js").catch(() => {});
       });
     }
 
-    function callDriver(phone) {
-      window.location.href = "tel:" + phone;
-    }
-
-    function messageDriver(phone, name, pickup, dropoff, passengerName) {
-      const msg = `Assalam o Alaikum ${name},%0A%0APassenger: ${passengerName}%0APickup: ${pickup}%0ADrop: ${dropoff}%0A%0AIdeal Hunza Transport se request bheji gayi hai.`;
-      window.open(`https://wa.me/92${phone.substring(1)}?text=${msg}`, "_blank");
-    }
-
-    function shareWhatsApp() {
-      const text = document.getElementById("shareText").value.trim();
-      if (!text) {
-        alert("Please type message first.");
-        return;
-      }
-      window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
-    }
+    renderDrivers();
   </script>
 </body>
 </html>
