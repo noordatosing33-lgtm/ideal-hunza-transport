@@ -1,57 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#0f766e" />
+  <meta name="description" content="Ideal Hunza Transport - Passenger & Driver App" />
+  <title>Ideal Hunza Transport</title>
 
-    function saveDrivers(drivers) {
-      localStorage.setItem("idealHunzaDrivers", JSON.stringify(drivers));
+  <link rel="manifest" href="manifest.json" />
+  <style>
+    :root{
+      --primary:#0f766e;
+      --primary2:#115e59;
+      --bg:#f8fafc;
+      --card:#ffffff;
+      --text:#0f172a;
+      --muted:#475569;
+      --danger:#b91c1c;
+      --ok:#166534;
+      --border:#e2e8f0;
+      --shadow:0 10px 25px rgba(0,0,0,.08);
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    html,body{
+      margin:0;padding:0;background:var(--bg);color:var(--text);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+    }
+    body{padding-bottom:90px}
+    .app{
+      max-width:560px;margin:0 auto;min-height:100vh;
+      background:linear-gradient(180deg,#ecfeff 0%, #f8fafc 28%, #f8fafc 100%);
+    }
+    .hero{
+      position:relative;overflow:hidden;border-bottom-left-radius:24px;border-bottom-right-radius:24px;
+      background:
+        linear-gradient(rgba(15,118,110,.45), rgba(15,118,110,.68)),
+        url('hunza.jpg') center/cover no-repeat;
+      min-height:220px;
+      padding:18px 16px 18px;
+      color:#fff;
+    }
+    .topbar{
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
+    }
+    .brand{
+      display:flex;align-items:center;gap:10px;
+    }
+    .logo{
+      width:44px;height:44px;border-radius:14px;background:rgba(255,255,255,.18);
+      display:grid;place-items:center;font-size:24px;backdrop-filter: blur(4px);
+      border:1px solid rgba(255,255,255,.25);
+    }
+    .brand h1{margin:0;font-size:20px;line-height:1.1}
+    .brand p{margin:2px 0 0;font-size:12px;opacity:.92}
+    .install-btn{
+      border:none;background:#fff;color:var(--primary2);font-weight:700;
+      padding:10px 14px;border-radius:14px;box-shadow:var(--shadow);cursor:pointer;
+    }
+    .hero-card{
+      margin-top:16px;background:rgba(255,255,255,.16);
+      border:1px solid rgba(255,255,255,.22);
+      border-radius:18px;padding:14px;backdrop-filter: blur(6px);
+    }
+    .hero-card h2{margin:0 0 8px;font-size:20px}
+    .hero-card p{margin:0;font-size:14px;line-height:1.5}
+    .wrap{padding:14px}
+    .tabs{
+      display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:-24px;
+      position:relative;z-index:2;
+    }
+    .tab{
+      border:none;background:#fff;padding:14px;border-radius:16px;box-shadow:var(--shadow);
+      font-weight:800;color:var(--primary2);cursor:pointer;
+    }
+    .tab.active{background:var(--primary);color:#fff}
+    .card{
+      background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+      box-shadow:var(--shadow);padding:14px;margin-top:14px;
+    }
+    .card h3{margin:0 0 10px;font-size:18px}
+    .small{font-size:12px;color:var(--muted)}
+    label{display:block;margin:10px 0 6px;font-weight:700;font-size:14px}
+    input,select,textarea{
+      width:100%;padding:12px 13px;border:1px solid var(--border);border-radius:14px;
+      font-size:15px;outline:none;background:#fff;
+    }
+    textarea{min-height:84px;resize:vertical}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .btn{
+      width:100%;border:none;background:var(--primary);color:#fff;
+      padding:13px 14px;border-radius:14px;font-weight:800;cursor:pointer;margin-top:12px;
+    }
+    .btn.secondary{background:#e2e8f0;color:#0f172a}
+    .btn.warn{background:#b45309}
+    .btn.danger{background:var(--danger)}
+    .btn.ghost{background:#f1f5f9;color:#0f172a}
+    .notice{
+      margin-top:10px;padding:12px;border-radius:14px;background:#ecfeff;border:1px solid #a5f3fc;
+      font-size:14px;
+    }
+    .list-title{
+      display:flex;justify-content:space-between;align-items:center;gap:10px;
+    }
+    .driver-card{
+      border:1px solid var(--border);border-radius:18px;padding:12px;margin-top:12px;background:#fff;
+    }
+    .driver-head{
+      display:flex;justify-content:space-between;gap:10px;align-items:flex-start;
+    }
+    .driver-name{
+      font-size:17px;font-weight:800;margin:0;
+    }
+    .pill{
+      display:inline-block;padding:6px 10px;border-radius:999px;font-size:12px;font-weight:800;
+      background:#dcfce7;color:#166534;
+    }
+    .pill.pending{background:#fef3c7;color:#92400e}
+    .pill.bad{background:#fee2e2;color:#991b1b}
+    .meta{
+      display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;font-size:13px;color:#334155;
+    }
+    .meta span{
+      background:#f8fafc;border:1px solid var(--border);padding:7px 9px;border-radius:999px;
+    }
+    .driver-actions{
+      display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:12px;
+    }
+    .action{
+      text-decoration:none;text-align:center;padding:11px 10px;border-radius:12px;font-weight:800;
+      border:1px solid var(--border);background:#f8fafc;color:#0f172a;
+    }
+    .action.whatsapp{background:#dcfce7;border-color:#86efac;color:#166534}
+    .action.call{background:#dbeafe;border-color:#93c5fd;color:#1d4ed8}
+    .action.book{background:#ccfbf1;border-color:#99f6e4;color:#0f766e}
+    .hidden{display:none !important}
+    .muted{color:var(--muted)}
+    .divider{height:1px;background:var(--border);margin:12px 0}
+    .footer-space{height:16px}
+    .badge{
+      display:inline-block;padding:6px 10px;border-radius:999px;background:#e0f2fe;color:#075985;font-size:12px;font-weight:800
+    }
+    .help{
+      font-size:13px;color:#334155;line-height:1.5
+    }
+    @media (max-width:430px){
+      .row{grid-template-columns:1fr}
+      .driver-actions{grid-template-columns:1fr 1fr}
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <section class="hero">
+      <div class="topbar">
+        <div class="brand">
+          <div class="logo">🚐</div>
+          <div>
+            <h1>Ideal Hunza Transport</h1>
+            <p>Passenger + Driver • Hunza / GB</p>
+          </div>
+        </div>
+        <button id="installBtn" class="install-btn hidden">Install App</button>
+      </div>
+
+      <div class="hero-card">
+        <h2>Hunza Local Transport & Booking</h2>
+        <p>
+          GPS se nearest driver pehle dikhega. Driver paid registration karega.
+          Passenger WhatsApp / Call se seedha contact kar sakta hai.
+        </p>
+      </div>
+    </section>
+
+    <div class="wrap">
+      <div class="tabs">
+        <button id="passengerTab" class="tab active">Passenger</button>
+        <button id="driverTab" class="tab">Driver</button>
+      </div>
+
+      <!-- PASSENGER -->
+      <section id="passengerSection" class="card">
+        <div class="list-title">
+          <h3>Find Nearby Drivers</h3>
+          <span class="badge" id="gpsStatus">GPS not checked</span>
+        </div>
+        <p class="small">Nearest approved driver list. Passenger ko sirf approved drivers dikhayenge.</p>
+
+        <button class="btn" id="findDriversBtn">📍 Find Nearest Drivers</button>
+        <button class="btn secondary" id="refreshDriversBtn">🔄 Refresh Driver List</button>
+
+        <div class="notice">
+          <b>Passenger:</b> Driver card me WhatsApp, Call aur Book buttons milenge.
+        </div>
+
+        <div class="divider"></div>
+
+        <div id="driversList">
+          <p class="muted">Abhi drivers load nahi huay. “Find Nearest Drivers” dabao.</p>
+        </div>
+      </section>
+
+      <!-- DRIVER -->
+      <section id="driverSection" class="card hidden">
+        <h3>Driver Registration</h3>
+        <p class="small">
+          Registration fee: <b>Rs.100</b> (10 bookings package)  
+          EasyPaisa: <b>03713370833</b>  
+          Fee pay karne ke baad admin approval ke baad list me show hoga.
+        </p>
+
+        <div class="notice">
+          <b>Important:</b> Driver registration free nahi hai.  
+          Rs.100 fee pay karo → screenshot / reference note do → GPS allow karo → submit karo.
+        </div>
+
+        <label>Driver Name</label>
+        <input id="driverName" type="text" placeholder="Apna naam" />
+
+        <label>Mobile Number (WhatsApp/Call)</label>
+        <input id="driverPhone" type="tel" placeholder="03xxxxxxxxx" />
+
+        <div class="row">
+          <div>
+            <label>Vehicle Type</label>
+            <select id="vehicleType">
+              <option value="Car">Car</option>
+              <option value="Van">Van</option>
+              <option value="Jeep">Jeep</option>
+              <option value="Hiace">Hiace</option>
+              <option value="Coaster">Coaster</option>
+              <option value="Pickup">Pickup</option>
+            </select>
+          </div>
+          <div>
+            <label>Area</label>
+            <input id="driverArea" type="text" placeholder="Hunza / Aliabad / Karimabad" />
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label>Booking Package</label>
+            <select id="driverPackage">
+              <option value="10 Bookings - Rs.100">10 Bookings - Rs.100</option>
+            </select>
+          </div>
+          <div>
+            <label>Payment Status</label>
+            <select id="paymentStatus">
+              <option value="Paid">Paid</option>
+              <option value="Pending">Pending</option>
+            </select>
+          </div>
+        </div>
+
+        <label>EasyPaisa Payment Ref / Note (optional)</label>
+        <input id="paymentNote" type="text" placeholder="Transaction ref ya note" />
+
+        <label>Extra Details (optional)</label>
+        <textarea id="driverDetails" placeholder="Seat, route, timing, luggage, etc."></textarea>
+
+        <button class="btn warn" id="captureGpsBtn">📍 Capture My GPS</button>
+        <p class="small" id="gpsCaptureText">GPS abhi capture nahi hui.</p>
+
+        <button class="btn" id="registerDriverBtn">✅ Submit Driver Registration</button>
+
+        <div class="notice">
+          <b>Note:</b> Driver submit ke baad list me save ho jayega.  
+          Agar payment “Paid” hai to approved dikhayega (demo mode).  
+          Agar “Pending” hai to pending status rahega.
+        </div>
+      </section>
+
+      <div class="footer-space"></div>
+    </div>
+  </div>
+
+  <!-- Firebase -->
+  <script type="module">
+    // ===== Firebase imports =====
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+    import {
+      getFirestore,
+      collection,
+      addDoc,
+      getDocs,
+      query,
+      orderBy,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+    // ===== Firebase config =====
+    const firebaseConfig = {
+      apiKey: "AIzaSyCW9WRjNZV1Jlr_RD8kSxolHeQaz96nEXU",
+      authDomain: "ideal-hunza-transport.firebaseapp.com",
+      projectId: "ideal-hunza-transport",
+      storageBucket: "ideal-hunza-transport.firebasestorage.app",
+      messagingSenderId: "735577791066",
+      appId: "1:735577791066:web:1eb366e8ef896df3739663",
+      measurementId: "G-JTVWSTM05N"
+    };
+
+    // ===== Init Firebase =====
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // ===== PWA install =====
+    let deferredPrompt = null;
+    const installBtn = document.getElementById("installBtn");
+
+    window.addEventListener("beforeinstallprompt", (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      installBtn.classList.remove("hidden");
+    });
+
+    installBtn.addEventListener("click", async () => {
+      if (!deferredPrompt) {
+        alert("Install popup abhi available nahi. Chrome me open karo ya thodi der baad dobara try karo.");
+        return;
+      }
+      deferredPrompt.prompt();
+      await deferredPrompt.userChoice;
+      deferredPrompt = null;
+      installBtn.classList.add("hidden");
+    });
+
+    // ===== Register service worker =====
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("./service-worker.js").catch(console.error);
+      });
     }
 
-    function toRad(v) {
-      return v * Math.PI / 180;
+    // ===== UI refs =====
+    const passengerTab = document.getElementById("passengerTab");
+    const driverTab = document.getElementById("driverTab");
+    const passengerSection = document.getElementById("passengerSection");
+    const driverSection = document.getElementById("driverSection");
+
+    const findDriversBtn = document.getElementById("findDriversBtn");
+    const refreshDriversBtn = document.getElementById("refreshDriversBtn");
+    const driversList = document.getElementById("driversList");
+    const gpsStatus = document.getElementById("gpsStatus");
+
+    const captureGpsBtn = document.getElementById("captureGpsBtn");
+    const gpsCaptureText = document.getElementById("gpsCaptureText");
+    const registerDriverBtn = document.getElementById("registerDriverBtn");
+
+    // Driver form
+    const driverName = document.getElementById("driverName");
+    const driverPhone = document.getElementById("driverPhone");
+    const vehicleType = document.getElementById("vehicleType");
+    const driverArea = document.getElementById("driverArea");
+    const driverPackage = document.getElementById("driverPackage");
+    const paymentStatus = document.getElementById("paymentStatus");
+    const paymentNote = document.getElementById("paymentNote");
+    const driverDetails = document.getElementById("driverDetails");
+
+    let passengerLocation = null;
+    let driverLocation = null;
+
+    // ===== Tabs =====
+    passengerTab.addEventListener("click", () => {
+      passengerTab.classList.add("active");
+      driverTab.classList.remove("active");
+      passengerSection.classList.remove("hidden");
+      driverSection.classList.add("hidden");
+    });
+
+    driverTab.addEventListener("click", () => {
+      driverTab.classList.add("active");
+      passengerTab.classList.remove("active");
+      driverSection.classList.remove("hidden");
+      passengerSection.classList.add("hidden");
+    });
+
+    // ===== Utils =====
+    function sanitizePhone(phone) {
+      return (phone || "").replace(/\D/g, "");
     }
 
-    function distanceKm(lat1, lon1, lat2, lon2) {
+    function formatWhatsAppLink(phone, text = "") {
+      const p = sanitizePhone(phone);
+      let international = p;
+      if (p.startsWith("0")) international = "92" + p.slice(1);
+      return `https://wa.me/${international}?text=${encodeURIComponent(text)}`;
+    }
+
+    function formatCallLink(phone) {
+      return `tel:${sanitizePhone(phone)}`;
+    }
+
+    function haversineKm(lat1, lon1, lat2, lon2) {
+      const toRad = deg => deg * Math.PI / 180;
       const R = 6371;
       const dLat = toRad(lat2 - lat1);
       const dLon = toRad(lon2 - lon1);
       const a =
-        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.sin(dLat/2) * Math.sin(dLat/2) +
         Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
-        Math.sin(dLon / 2) * Math.sin(dLon / 2);
-      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        Math.sin(dLon/2) * Math.sin(dLon/2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
       return R * c;
     }
 
-    function getPassengerGPS() {
-      if (!navigator.geolocation) {
-        alert("GPS not supported on this phone.");
-        return;
-      }
-      navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          passengerGPS = {
-            lat: pos.coords.latitude,
-            lng: pos.coords.longitude
-          };
-          document.getElementById("pGpsText").innerText =
-            "Passenger GPS saved: " + passengerGPS.lat.toFixed(5) + ", " + passengerGPS.lng.toFixed(5);
-          alert("Passenger GPS saved!");
-        },
-        () => alert("GPS permission denied or failed.")
-      );
+    function getCurrentPosition() {
+      return new Promise((resolve, reject) => {
+        if (!navigator.geolocation) {
+          reject(new Error("Geolocation supported nahi."));
+          return;
+        }
+        navigator.geolocation.getCurrentPosition(
+          pos => resolve(pos),
+          err => reject(err),
+          { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+        );
+      });
     }
 
-    function getDriverGPS() {
-      if (!navigator.geolocation) {
-        alert("GPS not supported on this phone.");
+    function escapeHtml(str = "") {
+      return str
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+    }
+
+    // ===== Driver GPS capture =====
+    captureGpsBtn.addEventListener("click", async () => {
+      try {
+        gpsCaptureText.textContent = "GPS capture ho rahi hai...";
+        const pos = await getCurrentPosition();
+        driverLocation = {
+          lat: pos.coords.latitude,
+          lng: pos.coords.longitude
+        };
+        gpsCaptureText.textContent = `GPS captured ✅ Lat: ${driverLocation.lat.toFixed(5)}, Lng: ${driverLocation.lng.toFixed(5)}`;
+      } catch (e) {
+        gpsCaptureText.textContent = "GPS allow karo. Agar block hai to browser settings me location on karo.";
+      }
+    });
+
+    // ===== Register Driver =====
+    registerDriverBtn.addEventListener("click", async () => {
+      const name = driverName.value.trim();
+      const phone = driverPhone.value.trim();
+      const vehicle = vehicleType.value;
+      const area = driverArea.value.trim();
+      const pkg = driverPackage.value;
+      const payStatus = paymentStatus.value;
+      const payNote = paymentNote.value.trim();
+      const details = driverDetails.value.trim();
+
+      if (!name || !phone || !area) {
+        alert("Name, phone aur area fill karo.");
         return;
       }
-      navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          driverGPS = {
-            lat: pos.coords.latitude,
-            lng: pos.coords.longitude
-          };
-          document.getElementById("dGpsText").innerText =
-            "Driver GPS saved: " + driverGPS.lat.toFixed(5) + ", " + driverGPS.lng.toFixed(5);
-          alert("Driver GPS saved!");
-        },
-        () => alert("GPS 
+
+      if (!driverLocation) {
+        alert("Pehle 'Capture My GPS' dabao aur GPS allow karo.");
+        return;
+      }
+
+      const approved = payStatus === "Paid"; // demo approval logic
+
+      try {
+        registerDriverBtn.disabled = true;
+        registerDriverBtn.textContent = "Saving...";
+
+        await addDoc(collection(db, "drivers"), {
+          name,
+          phone,
+          vehicle,
+          area,
+          package: pkg,
+          paymentStatus: payStatus,
+          paymentNote: payNote,
+          details,
+          approved,
+          lat: driverLocation.lat,
+          lng: driverLocation.lng,
+          createdAt: serverTimestamp()
+        });
+
+        alert(approved
+          ? "Driver registration successful ✅ Approved list me show hoga."
+          : "Driver registration saved ⏳ Payment pending hai, abhi pending rahega."
+        );
+
+        driverName.value = "";
+        driverPhone.value = "";
+        driverArea.value = "";
+        paymentNote.value = "";
+        driverDetails.value = "";
+        driverLocation = null;
+        gpsCaptureText.textContent = "GPS abhi capture nahi hui.";
+
+        // Auto switch to passenger and refresh
+        passengerTab.click();
+        loadDrivers();
+      } catch (err) {
+        console.error(err);
+        alert("Save me masla aaya. Firestore rules check karo.");
+      } finally {
+        registerDriverBtn.disabled = false;
+        registerDriverBtn.textContent = "✅ Submit Driver Registration";
+      }
+    });
+
+    // ===== Load Drivers =====
+    async function loadDrivers() {
+      driversList.innerHTML = "<p class='muted'>Drivers load ho rahe hain...</p>";
+
+      try {
+        const q = query(collection(db, "drivers"), orderBy("createdAt", "desc"));
+        const snap = await getDocs(q);
+
+        let drivers = [];
+        snap.forEach(doc => {
+          drivers.push({ id: doc.id, ...doc.data() });
+        });
+
+        // Passenger ko sirf approved drivers dikhayen
+        drivers = drivers.filter(d => d.approved === true);
+
+        if (passengerLocation) {
+          drivers = drivers.map(d => {
+            if (typeof d.lat === "number" && typeof d.lng === "number") {
+              d.distanceKm = haversineKm(passengerLocation.lat, passengerLocation.lng, d.lat, d.lng);
+            } else {
+              d.distanceKm = null;
+            }
+            return d;
+          });
+
+          drivers.sort((a, b) => {
+            if (a.distanceKm == null && b.distanceKm == null) return 0;
+            if (a.distanceKm == null) return 1;
+            if (b.distanceKm == null) return -1;
+            return a.distanceKm - b.distanceKm;
+          });
+        }
+
+        renderDrivers(drivers);
+      } catch (err) {
+        console.error(err);
+        driversList.innerHTML = `
+          <div class="notice" style="background:#fef2f2;border-color:#fecaca">
+            <b>Firestore rules / index issue:</b><br>
+            Agar load nahi hota to Firestore Database create karo aur test rules do.<br><br>
+            Error: ${escapeHtml(err.message || "Unknown")}
+          </div>
+        `;
+      }
+    }
+
+    // ===== Render Drivers =====
+    function renderDrivers(drivers) {
+      if (!drivers.length) {
+        driversList.innerHTML = "<p class='muted'>Abhi koi approved driver available nahi.</p>";
+        return;
+      }
+
+      driversList.innerHTML = "";
+
+      drivers.forEach((d, idx) => {
+        const distanceText = d.distanceKm != null ? `${d.distanceKm.toFixed(1)} km away` : "Distance unknown";
+        const waMsg = `Assalam o Alaikum, mujhe booking chahiye. Driver: ${d.name}`;
+        const wa = formatWhatsAppLink(d.phone, waMsg);
+        const call = formatCallLink(d.phone);
+
+        const card = document.createElement("div");
+        card.className = "driver-card";
+
+        card.innerHTML = `
+          <div class="driver-head">
+            <div>
+              <p class="driver-name">${idx + 1}. ${escapeHtml(d.name)}</p>
+              <div class="small">${escapeHtml(d.area || "Hunza")}</div>
+            </div>
+            <span class="pill">Approved</span>
+          </div>
+
+          <div class="meta">
+            <span>🚘 ${escapeHtml(d.vehicle || "Vehicle")}</span>
+            <span>📍 ${escapeHtml(distanceText)}</span>
+            <span>📦 ${escapeHtml(d.package || "10 Bookings - Rs.100")}</span>
+          </div>
+
+          ${d.details ? `<div class="notice" style="margin-top:10px"><b>Details:</b> ${escapeHtml(d.details)}</div>` : ""}
+
+          <div class="driver-actions">
+            <a class="action whatsapp" href="${wa}" target="_blank" rel="noopener">WhatsApp</a>
+            <a class="action call" href="${call}">Call</a>
+            <a class="action book" href="${wa}" target="_blank" rel="noopener">Book</a>
+          </div>
+        `;
+
+        driversList.appendChild(card);
+      });
+    }
+
+    // ===== Passenger buttons =====
+    findDriversBtn.addEventListener("click", async () => {
+      try {
+        gpsStatus.textContent = "Getting GPS...";
+        const pos = await getCurrentPosition();
+        passengerLocation = {
+          lat: pos.coords.latitude,
+          lng: pos.coords.longitude
+        };
+        gpsStatus.textContent = "GPS Ready ✅";
+        await loadDrivers();
+      } catch (e) {
+        gpsStatus.textContent = "GPS blocked";
+        alert("GPS allow nahi hui. Driver list to dikhegi, lekin nearest sorting nahi hogi.");
+        passengerLocation = null;
+        await loadDrivers();
+      }
+    });
+
+    refreshDriversBtn.addEventListener("click", loadDrivers);
+
+    // ===== First load =====
+    loadDrivers();
+  </script>
 </body>
+</html>
